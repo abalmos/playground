@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HydroTracker - Hydroponics Grow Management</title>
+    <link rel="stylesheet" href="hydro-styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🌱 HydroTracker</h1>
+            <p class="tagline">Complete Hydroponics Grow Management</p>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <button onclick="showView('dashboard')" class="nav-btn active" data-view="dashboard">Dashboard</button>
+            <button onclick="showView('grows')" class="nav-btn" data-view="grows">Grows</button>
+            <button onclick="showView('log')" class="nav-btn" data-view="log">Daily Log</button>
+            <button onclick="showView('nutrients')" class="nav-btn" data-view="nutrients">Nutrients</button>
+            <button onclick="showView('tasks')" class="nav-btn" data-view="tasks">Tasks</button>
+            <button onclick="showView('timeline')" class="nav-btn" data-view="timeline">Timeline</button>
+            <button onclick="showView('analytics')" class="nav-btn" data-view="analytics">Analytics</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view" class="view active">
+            <div class="view-header">
+                <h2>Dashboard</h2>
+                <button onclick="showAddGrow()" class="btn">+ New Grow</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="activeGrowsCount">0</div>
+                    <div class="stat-label">Active Grows</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="tasksToday">0</div>
+                    <div class="stat-label">Tasks Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="harvestSoon">0</div>
+                    <div class="stat-label">Harvest Soon</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalHarvests">0</div>
+                    <div class="stat-label">Total Harvests</div>
+                </div>
+            </div>
+
+            <div class="dashboard-section">
+                <h3>Active Grows</h3>
+                <div id="activeGrowsList"></div>
+            </div>
+
+            <div class="dashboard-section">
+                <h3>Upcoming Tasks</h3>
+                <div id="upcomingTasksList"></div>
+            </div>
+
+            <div class="dashboard-section">
+                <h3>Recent Alerts</h3>
+                <div id="recentAlerts"></div>
+            </div>
+        </div>
+
+        <!-- GROWS VIEW -->
+        <div id="grows-view" class="view">
+            <div class="view-header">
+                <h2>Manage Grows</h2>
+                <button onclick="showAddGrow()" class="btn">+ New Grow</button>
+            </div>
+
+            <div class="filter-bar">
+                <select id="filterLocation" onchange="filterGrows()">
+                    <option value="">All Locations</option>
+                </select>
+                <select id="filterSystem" onchange="filterGrows()">
+                    <option value="">All Systems</option>
+                    <option value="DWC">DWC</option>
+                    <option value="Bato Buckets">Bato Buckets</option>
+                    <option value="NFT">NFT</option>
+                    <option value="Ebb & Flow">Ebb & Flow</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select id="filterStatus" onchange="filterGrows()">
+                    <option value="active">Active</option>
+                    <option value="completed">Completed</option>
+                    <option value="all">All</option>
+                </select>
+            </div>
+
+            <div id="growsList"></div>
+        </div>
+
+        <!-- DAILY LOG VIEW -->
+        <div id="log-view" class="view">
+            <div class="view-header">
+                <h2>Daily Log</h2>
+                <input type="date" id="logDate" onchange="loadLogsForDate()">
+            </div>
+
+            <div class="form-group">
+                <label>Select Grow</label>
+                <select id="logGrowSelect" onchange="showLogForm()">
+                    <option value="">-- Select a grow --</option>
+                </select>
+            </div>
+
+            <div id="logFormContainer" style="display: none;">
+                <div class="card">
+                    <h3>Log Entry</h3>
+
+                    <div class="metrics-grid">
+                        <div class="form-group">
+                            <label for="logPH">pH</label>
+                            <input type="number" id="logPH" step="0.1" min="0" max="14" placeholder="6.0">
+                        </div>
+                        <div class="form-group">
+                            <label for="logEC">EC (mS/cm)</label>
+                            <input type="number" id="logEC" step="0.1" placeholder="1.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="logPPM">PPM</label>
+                            <input type="number" id="logPPM" placeholder="1050">
+                        </div>
+                        <div class="form-group">
+                            <label for="logWaterTemp">Water Temp (°F)</label>
+                            <input type="number" id="logWaterTemp" step="0.1" placeholder="68">
+                        </div>
+                        <div class="form-group">
+                            <label for="logAirTemp">Air Temp (°F)</label>
+                            <input type="number" id="logAirTemp" step="0.1" placeholder="75">
+                        </div>
+                        <div class="form-group">
+                            <label for="logHumidity">Humidity (%)</label>
+                            <input type="number" id="logHumidity" min="0" max="100" placeholder="60">
+                        </div>
+                        <div class="form-group">
+                            <label for="logLightHours">Light Hours</label>
+                            <input type="number" id="logLightHours" step="0.5" min="0" max="24" placeholder="16">
+                        </div>
+                        <div class="form-group">
+                            <label for="logReservoirLevel">Reservoir Level (gal)</label>
+                            <input type="number" id="logReservoirLevel" step="0.5" placeholder="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="logRunoffPH">Runoff pH</label>
+                            <input type="number" id="logRunoffPH" step="0.1" min="0" max="14" placeholder="6.2">
+                        </div>
+                        <div class="form-group">
+                            <label for="logRunoffEC">Runoff EC</label>
+                            <input type="number" id="logRunoffEC" step="0.1" placeholder="1.8">
+                        </div>
+                        <div class="form-group">
+                            <label for="logPlantHeight">Plant Height (in)</label>
+                            <input type="number" id="logPlantHeight" step="0.5" placeholder="12">
+                        </div>
+                        <div class="form-group">
+                            <label for="logStage">Growth Stage</label>
+                            <select id="logStage">
+                                <option value="">-- Select --</option>
+                                <option value="Seed">Seed</option>
+                                <option value="Seedling">Seedling</option>
+                                <option value="Vegetative">Vegetative</option>
+                                <option value="Pre-Flower">Pre-Flower</option>
+                                <option value="Flowering">Flowering</option>
+                                <option value="Ripening">Ripening</option>
+                                <option value="Harvest">Harvest</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="logNotes">Notes / Observations</label>
+                        <textarea id="logNotes" rows="4" placeholder="Plant health, issues, pests, nutrient changes, etc."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Photos</label>
+                        <input type="file" id="logPhotos" accept="image/*" multiple>
+                        <div id="photoPreview" class="photo-preview"></div>
+                    </div>
+
+                    <button onclick="saveLog()" class="btn btn-success">Save Log Entry</button>
+                </div>
+
+                <div class="card">
+                    <h3>Today's Logs for This Grow</h3>
+                    <div id="todayLogs"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUTRIENTS VIEW -->
+        <div id="nutrients-view" class="view">
+            <div class="view-header">
+                <h2>Nutrient Management</h2>
+                <button onclick="showAddNutrient()" class="btn">+ Add Nutrient</button>
+            </div>
+
+            <div class="card">
+                <h3>Nutrient Calculator</h3>
+                <div class="form-group">
+                    <label for="calcReservoirSize">Reservoir Size (gallons)</label>
+                    <input type="number" id="calcReservoirSize" step="0.5" placeholder="10">
+                </div>
+                <div class="form-group">
+                    <label for="calcTargetEC">Target EC (mS/cm)</label>
+                    <input type="number" id="calcTargetEC" step="0.1" placeholder="1.5">
+                </div>
+                <div id="nutrientCalcResults"></div>
+            </div>
+
+            <div class="card">
+                <h3>Nutrient Library</h3>
+                <div id="nutrientList"></div>
+            </div>
+
+            <div class="card">
+                <h3>Feeding Schedule</h3>
+                <div class="form-group">
+                    <label>Select Grow</label>
+                    <select id="feedingGrowSelect" onchange="loadFeedingSchedule()">
+                        <option value="">-- Select a grow --</option>
+                    </select>
+                </div>
+                <div id="feedingSchedule"></div>
+            </div>
+        </div>
+
+        <!-- TASKS VIEW -->
+        <div id="tasks-view" class="view">
+            <div class="view-header">
+                <h2>Tasks & Reminders</h2>
+                <button onclick="showAddTask()" class="btn">+ New Task</button>
+            </div>
+
+            <div class="task-filters">
+                <button onclick="filterTasks('today')" class="filter-btn active">Today</button>
+                <button onclick="filterTasks('upcoming')" class="filter-btn">Upcoming</button>
+                <button onclick="filterTasks('overdue')" class="filter-btn">Overdue</button>
+                <button onclick="filterTasks('completed')" class="filter-btn">Completed</button>
+                <button onclick="filterTasks('all')" class="filter-btn">All</button>
+            </div>
+
+            <div id="tasksList"></div>
+        </div>
+
+        <!-- TIMELINE VIEW -->
+        <div id="timeline-view" class="view">
+            <div class="view-header">
+                <h2>Timeline & Calendar</h2>
+            </div>
+
+            <div class="calendar-controls">
+                <button onclick="changeMonth(-1)">← Previous</button>
+                <h3 id="currentMonth"></h3>
+                <button onclick="changeMonth(1)">Next →</button>
+            </div>
+
+            <div id="calendar"></div>
+
+            <div class="card">
+                <h3>Selected Date Events</h3>
+                <div id="dateEvents"></div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS VIEW -->
+        <div id="analytics-view" class="view">
+            <div class="view-header">
+                <h2>Analytics & Reports</h2>
+            </div>
+
+            <div class="form-group">
+                <label>Select Grow for Analysis</label>
+                <select id="analyticsGrowSelect" onchange="loadAnalytics()">
+                    <option value="">-- Select a grow --</option>
+                </select>
+            </div>
+
+            <div id="analyticsContainer"></div>
+        </div>
+    </main>
+
+    <!-- ADD GROW MODAL -->
+    <div id="addGrowModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Grow</h2>
+                <button onclick="closeAddGrow()" class="close-btn">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label for="growName">Grow Name *</label>
+                <input type="text" id="growName" placeholder="e.g., Spring Lettuce 2024" required>
+            </div>
+
+            <div class="form-group">
+                <label for="growPlantType">Plant Type *</label>
+                <input type="text" id="growPlantType" placeholder="e.g., Lettuce, Calendula, Tomato">
+            </div>
+
+            <div class="form-group">
+                <label for="growLocation">Location *</label>
+                <input type="text" id="growLocation" placeholder="e.g., Indoor Room 1, Outdoor Bed A" list="locations">
+                <datalist id="locations"></datalist>
+            </div>
+
+            <div class="form-group">
+                <label for="growEnvironment">Environment</label>
+                <select id="growEnvironment">
+                    <option value="Indoor">Indoor</option>
+                    <option value="Outdoor">Outdoor</option>
+                    <option value="Greenhouse">Greenhouse</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="growSystem">System Type *</label>
+                <select id="growSystem">
+                    <option value="DWC">DWC (Deep Water Culture)</option>
+                    <option value="Bato Buckets">Bato Buckets (Drain to Waste)</option>
+                    <option value="NFT">NFT (Nutrient Film Technique)</option>
+                    <option value="Ebb & Flow">Ebb & Flow</option>
+                    <option value="Drip">Drip System</option>
+                    <option value="Kratky">Kratky</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="growMedium">Growing Medium</label>
+                <select id="growMedium">
+                    <option value="Coco Coir">Coco Coir</option>
+                    <option value="Rockwool">Rockwool</option>
+                    <option value="Clay Pebbles">Clay Pebbles</option>
+                    <option value="Perlite">Perlite</option>
+                    <option value="Water Only">Water Only</option>
+                    <option value="Mixed">Mixed</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="growStartDate">Start Date</label>
+                <input type="date" id="growStartDate">
+            </div>
+
+            <div class="form-group">
+                <label for="growExpectedHarvest">Expected Harvest Date</label>
+                <input type="date" id="growExpectedHarvest">
+            </div>
+
+            <div class="form-group">
+                <label for="growPurpose">Purpose</label>
+                <select id="growPurpose">
+                    <option value="Fresh Consumption">Fresh Consumption</option>
+                    <option value="Drying">Drying (Calendula, Chamomile)</option>
+                    <option value="Cut Flowers">Cut Flowers</option>
+                    <option value="Edible Flowers">Edible Flowers</option>
+                    <option value="Seeds">Seed Production</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="growNotes">Initial Notes</label>
+                <textarea id="growNotes" rows="3" placeholder="Variety, seed source, special considerations..."></textarea>
+            </div>
+
+            <button onclick="saveGrow()" class="btn btn-success">Create Grow</button>
+        </div>
+    </div>
+
+    <!-- ADD TASK MODAL -->
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Task</h2>
+                <button onclick="closeAddTask()" class="close-btn">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label for="taskTitle">Task *</label>
+                <input type="text" id="taskTitle" placeholder="e.g., Change reservoir, Switch to 12/12 light">
+            </div>
+
+            <div class="form-group">
+                <label for="taskGrow">Related Grow</label>
+                <select id="taskGrow">
+                    <option value="">-- Optional --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="taskDueDate">Due Date</label>
+                <input type="date" id="taskDueDate">
+            </div>
+
+            <div class="form-group">
+                <label for="taskPriority">Priority</label>
+                <select id="taskPriority">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="taskRecurring">
+                    Recurring Task
+                </label>
+            </div>
+
+            <div id="recurringOptions" style="display: none;">
+                <div class="form-group">
+                    <label for="taskFrequency">Frequency</label>
+                    <select id="taskFrequency">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Bi-weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="taskNotes">Notes</label>
+                <textarea id="taskNotes" rows="3"></textarea>
+            </div>
+
+            <button onclick="saveTask()" class="btn btn-success">Create Task</button>
+        </div>
+    </div>
+
+    <!-- ADD NUTRIENT MODAL -->
+    <div id="addNutrientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Nutrient</h2>
+                <button onclick="closeAddNutrient()" class="close-btn">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label for="nutrientName">Nutrient Name *</label>
+                <input type="text" id="nutrientName" placeholder="e.g., General Hydroponics FloraGrow">
+            </div>
+
+            <div class="form-group">
+                <label for="nutrientBrand">Brand</label>
+                <input type="text" id="nutrientBrand" placeholder="e.g., General Hydroponics">
+            </div>
+
+            <div class="form-group">
+                <label for="nutrientType">Type</label>
+                <select id="nutrientType">
+                    <option value="Base">Base Nutrient</option>
+                    <option value="Grow">Grow (Vegetative)</option>
+                    <option value="Bloom">Bloom (Flowering)</option>
+                    <option value="CalMag">CalMag</option>
+                    <option value="Supplement">Supplement</option>
+                    <option value="pH Up">pH Up</option>
+                    <option value="pH Down">pH Down</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="nutrientNPK">NPK Ratio</label>
+                <input type="text" id="nutrientNPK" placeholder="e.g., 3-1-6">
+            </div>
+
+            <div class="form-group">
+                <label for="nutrientDosage">Recommended Dosage (ml/gal)</label>
+                <input type="number" id="nutrientDosage" step="0.1" placeholder="5">
+            </div>
+
+            <button onclick="saveNutrient()" class="btn btn-success">Add Nutrient</button>
+        </div>
+    </div>
+
+    <script src="hydro-app.js"></script>
+</body>
+</html>
