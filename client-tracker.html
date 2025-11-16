@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Tracker - Soul & Energy Healing Tools</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <a href="index.html" class="back-link">← Back to Home</a>
+            <h1>👥 Client Session Tracker</h1>
+            <p>Manage your healing practice and client sessions</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Client Management</h2>
+                <button onclick="showAddClient()" class="btn">+ Add New Client</button>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="searchClients" placeholder="Search clients..." onkeyup="filterClients()">
+            </div>
+
+            <div id="clientsList"></div>
+        </div>
+
+        <!-- Add Client Modal -->
+        <div id="addClientModal" style="display: none;">
+            <div class="card">
+                <h2>Add New Client</h2>
+
+                <div class="form-group">
+                    <label for="clientName">Client Name *</label>
+                    <input type="text" id="clientName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientEmail">Email</label>
+                    <input type="email" id="clientEmail">
+                </div>
+
+                <div class="form-group">
+                    <label for="clientPhone">Phone</label>
+                    <input type="tel" id="clientPhone">
+                </div>
+
+                <div class="form-group">
+                    <label for="clientNotes">Initial Notes</label>
+                    <textarea id="clientNotes" rows="3" placeholder="Health concerns, goals, preferences..."></textarea>
+                </div>
+
+                <div class="controls">
+                    <button onclick="saveClient()" class="btn btn-success">Save Client</button>
+                    <button onclick="cancelAddClient()" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Details Modal -->
+        <div id="clientDetailsModal" style="display: none;">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <h2 id="detailClientName"></h2>
+                        <p style="color: var(--text-light);" id="detailClientInfo"></p>
+                    </div>
+                    <button onclick="closeClientDetails()" class="btn btn-secondary">Close</button>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <button onclick="showAddSession()" class="btn">+ Add Session</button>
+                    <button onclick="exportClientData()" class="btn btn-secondary">Export Data</button>
+                </div>
+
+                <h3>Session History</h3>
+                <div id="sessionHistory"></div>
+
+                <div id="addSessionForm" style="display: none; margin-top: 2rem;">
+                    <div class="card" style="background: var(--bg-light);">
+                        <h4>Add New Session</h4>
+
+                        <div class="form-group">
+                            <label for="sessionDate">Date</label>
+                            <input type="date" id="sessionDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sessionType">Session Type</label>
+                            <select id="sessionType">
+                                <option value="reiki">Reiki Healing</option>
+                                <option value="soul-contract">Soul Contract Reading</option>
+                                <option value="consultation">Consultation</option>
+                                <option value="follow-up">Follow-up</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sessionDuration">Duration (minutes)</label>
+                            <input type="number" id="sessionDuration" value="60">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sessionNotes">Session Notes</label>
+                            <textarea id="sessionNotes" rows="4" placeholder="What was addressed, client feedback, observations..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sessionAmount">Payment Amount ($)</label>
+                            <input type="number" id="sessionAmount" step="0.01" placeholder="0.00">
+                        </div>
+
+                        <div class="controls">
+                            <button onclick="saveSession()" class="btn btn-success">Save Session</button>
+                            <button onclick="cancelAddSession()" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="client-tracker.js"></script>
+</body>
+</html>

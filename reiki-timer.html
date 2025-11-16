@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reiki Session Timer - Soul & Energy Healing Tools</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <a href="index.html" class="back-link">← Back to Home</a>
+            <h1>🧘 Reiki Session Timer</h1>
+            <p>Professional timer for energy healing sessions</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="card">
+            <h2>Session Setup</h2>
+
+            <div class="form-group">
+                <label for="sessionType">Session Type</label>
+                <select id="sessionType" onchange="updateSessionType()">
+                    <option value="full">Full Body Session (60-90 min)</option>
+                    <option value="chakra">Chakra Balancing (45-60 min)</option>
+                    <option value="quick">Quick Session (30 min)</option>
+                    <option value="custom">Custom Duration</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="customDurationGroup" style="display: none;">
+                <label for="customDuration">Duration per Position (minutes)</label>
+                <input type="number" id="customDuration" value="5" min="1" max="30">
+            </div>
+
+            <div class="form-group">
+                <label for="clientName">Client Name (Optional)</label>
+                <input type="text" id="clientName" placeholder="For session logging">
+            </div>
+
+            <div class="controls">
+                <button onclick="startSession()" class="btn" id="startBtn">Start Session</button>
+                <button onclick="pauseSession()" class="btn btn-secondary" id="pauseBtn" disabled>Pause</button>
+                <button onclick="stopSession()" class="btn btn-danger" id="stopBtn" disabled>End Session</button>
+            </div>
+        </div>
+
+        <div id="sessionActive" style="display: none;">
+            <div class="card">
+                <h2>Current Position</h2>
+                <div class="timer-display" id="timer">00:00</div>
+
+                <div style="text-align: center; margin: 1rem 0;">
+                    <div style="font-size: 1.5rem; color: var(--primary-color); font-weight: bold;" id="currentPosition">
+                        Ready to Begin
+                    </div>
+                    <div style="color: var(--text-light); margin-top: 0.5rem;" id="positionDescription"></div>
+                </div>
+
+                <div class="controls">
+                    <button onclick="previousPosition()" class="btn btn-secondary">← Previous</button>
+                    <button onclick="nextPosition()" class="btn">Next →</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Session Progress</h2>
+                <div class="chakra-grid" id="chakraGrid"></div>
+            </div>
+        </div>
+
+        <div id="sessionComplete" style="display: none;">
+            <div class="card">
+                <h2>✨ Session Complete</h2>
+
+                <div class="result-box">
+                    <h3>Session Summary</h3>
+                    <div id="sessionSummary"></div>
+                </div>
+
+                <div class="controls">
+                    <button onclick="saveSession()" class="btn btn-success">Save Session Log</button>
+                    <button onclick="resetSession()" class="btn btn-secondary">New Session</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="reiki-timer.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Contract Calculator - Soul & Energy Healing Tools</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <a href="index.html" class="back-link">← Back to Home</a>
+            <h1>📜 Soul Contract Calculator</h1>
+            <p>Decode the spiritual blueprint encoded in names</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="card">
+            <h2>Calculate Soul Contract Numbers</h2>
+            <p>Enter a name to calculate its soul contract numbers using sacred numerology. This system reveals spiritual goals, talents, and karmic patterns.</p>
+
+            <div class="form-group">
+                <label for="fullName">Full Name (Birth Name Recommended)</label>
+                <input type="text" id="fullName" placeholder="e.g., John Michael Smith">
+            </div>
+
+            <button onclick="calculateSoulContract()" class="btn">Calculate Soul Contract</button>
+            <button onclick="clearResults()" class="btn btn-secondary">Clear</button>
+        </div>
+
+        <div id="results" style="display: none;">
+            <div class="card">
+                <h2>Soul Contract Analysis</h2>
+
+                <div class="result-box">
+                    <h3>Name Breakdown</h3>
+                    <div id="nameBreakdown"></div>
+                </div>
+
+                <div class="number-grid">
+                    <div class="number-box">
+                        <strong id="soulDestiny">0</strong>
+                        <span>Soul Destiny</span>
+                    </div>
+                    <div class="number-box">
+                        <strong id="spiritualGoal">0</strong>
+                        <span>Spiritual Goal</span>
+                    </div>
+                    <div class="number-box">
+                        <strong id="physicalGoal">0</strong>
+                        <span>Physical Goal</span>
+                    </div>
+                    <div class="number-box">
+                        <strong id="talents">0</strong>
+                        <span>Talents</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <h3>Interpretation</h3>
+                    <div id="interpretation"></div>
+                </div>
+
+                <div class="result-box">
+                    <h3>Export Reading</h3>
+                    <button onclick="exportReading()" class="btn">Download PDF Report</button>
+                    <button onclick="copyToClipboard()" class="btn btn-secondary">Copy to Clipboard</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="soul-contract.js"></script>
+</body>
+</html>
